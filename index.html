@@ -15,89 +15,88 @@
     <script>
       var dateSelect  = $('#dateSelect').MPDatepicker();
       var eventGraph  = $('#graph').MPChart({chartType: 'line'});
-      var dateRange = {
-        from: "2015-09-01",
-        to: "2016-09-30"
-      }
       
-      var unit = 'month'
-      var funnels = [
-        {
-          funnel_id:1962718,
-          from_date:dateRange.from,
-          to_date: dateRange.to,
-          limit:200,
-          unit: unit
-        },
-        {
-          funnel_id:1965004,
-          from_date:dateRange.from,
-          to_date: dateRange.to,
-          limit:200,
-          unit: unit
-        },
-        {
-          funnel_id:1965034,
-          from_date:dateRange.from,
-          to_date: dateRange.to,
-          limit:200,
-          unit: unit
-        },
-        {
-          funnel_id:1965052,
-          from_date:dateRange.from,
-          to_date: dateRange.to,
-          limit:200,
-          unit: unit
-        },
-        {
-          funnel_id:1965056,
-          from_date:dateRange.from,
-          to_date: dateRange.to,
-          limit:200,
-          unit: unit
-        },
-        {
-          funnel_id:1965086,
-          from_date:dateRange.from,
-          to_date: dateRange.to,
-          limit:200,
-          unit: unit
-        },
-        {
-          funnel_id:1965114,
-          from_date:dateRange.from,
-          to_date: dateRange.to,
-          limit:200,
-          unit: unit
-        },
-        ]
-        
-      var funnelNames = [
-        "OAO 1",
-        "OAO 2",
-        "OAO 3",
-        "OAO 4",
-        "OAO 5",
-        "OAO 6",
-        "OAO 7"
-        ]  
-      var queryPromises = []
-      // add segmentation requests to queryPromises  
-     
-      _.each(funnels, funnel => queryPromises.push(MP.api.query('api/2.0/funnels/',funnel)))  
-      Promise.all(queryPromises).then(function(promises){
-        var res = {}
-        debugger
-        _.each(promises, function(funnel, i){
-          res[funnelNames[i]] = {}
-          _.each(funnel.data, function(conv, month){
-            res[funnelNames[i]][month] = conv.steps[conv.steps.length - 1]["overall_conv_ratio"]
+      var runQuery = function(){
+        var dateRange  = $('#dateSelect').MPDatepicker('value');
+        var unit = 'month'
+        var funnels = [
+          {
+            funnel_id:1962718,
+            from_date:dateRange.from,
+            to_date: dateRange.to,
+            limit:200,
+            unit: unit
+          },
+          {
+            funnel_id:1965004,
+            from_date:dateRange.from,
+            to_date: dateRange.to,
+            limit:200,
+            unit: unit
+          },
+          {
+            funnel_id:1965034,
+            from_date:dateRange.from,
+            to_date: dateRange.to,
+            limit:200,
+            unit: unit
+          },
+          {
+            funnel_id:1965052,
+            from_date:dateRange.from,
+            to_date: dateRange.to,
+            limit:200,
+            unit: unit
+          },
+          {
+            funnel_id:1965056,
+            from_date:dateRange.from,
+            to_date: dateRange.to,
+            limit:200,
+            unit: unit
+          },
+          {
+            funnel_id:1965086,
+            from_date:dateRange.from,
+            to_date: dateRange.to,
+            limit:200,
+            unit: unit
+          },
+          {
+            funnel_id:1965114,
+            from_date:dateRange.from,
+            to_date: dateRange.to,
+            limit:200,
+            unit: unit
+          },
+          ]
+          
+        var funnelNames = [
+          "OAO 1",
+          "OAO 2",
+          "OAO 3",
+          "OAO 4",
+          "OAO 5",
+          "OAO 6",
+          "OAO 7"
+          ]  
+        var queryPromises = []
+        // add segmentation requests to queryPromises  
+       
+        _.each(funnels, funnel => queryPromises.push(MP.api.query('api/2.0/funnels/',funnel)))  
+        Promise.all(queryPromises).then(function(promises){
+          var res = {}
+          debugger
+          _.each(promises, function(funnel, i){
+            res[funnelNames[i]] = {}
+            _.each(funnel.data, function(conv, month){
+              res[funnelNames[i]][month] = conv.steps[conv.steps.length - 1]["overall_conv_ratio"]
+            })
           })
+          eventGraph.MPChart('setData', res);
+          // downloadCSV(res, 'TEA Dashboards' + ' ' + new Date().toISOString().substr(0, 10))
         })
-        eventGraph.MPChart('setData', res);
-        // downloadCSV(res, 'TEA Dashboards' + ' ' + new Date().toISOString().substr(0, 10))
-      })
+      }
       
     function downloadCSV(data, ReportTitle) {
       $('.temporary').textContent = 'Downloading'
@@ -142,7 +141,8 @@
       link.click();
       document.body.removeChild(link);
     };
-      
+    runQuery()
+    dateSelect.on('change', runQuery)
     </script>
   </body>
 </html>
