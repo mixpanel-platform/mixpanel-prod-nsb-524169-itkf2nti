@@ -8,6 +8,7 @@
   </head>
   <body class="mixpanel-platform-body">
     <div class="mixpanel-platform-section">
+      <input type="button" name="exportButton" id="export" value="Export Funnels" style="font-weight: bold; color: rgb(95,105,131); font-size: 12px; height: 31px; padding: 0 10px; margin-left: 10px; border: 1px solid rgb(201,209,219); background-color: rgb(242,244,246); display: none">
       <div id="dateSelect" style="float: right;"></div>
       <div style="clear: both;"></div>
       <div id="graph"></div>
@@ -15,7 +16,7 @@
     <script>
       var dateSelect  = $('#dateSelect').MPDatepicker();
       var eventGraph  = $('#graph').MPChart({chartType: 'line'});
-      
+      var exportButton = $('#export')
       var runQuery = function(){
         var dateRange  = $('#dateSelect').MPDatepicker('value');
         var unit = 'day'
@@ -71,6 +72,7 @@
             })
           })
           eventGraph.MPChart('setData', res);
+          exportButton.css("display", "")
           downloadCSV(res, 'OAO CSV' + ' ' + new Date().toISOString().substr(0, 10))
         })
       }
