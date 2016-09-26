@@ -18,7 +18,7 @@
       
       var runQuery = function(){
         var dateRange  = $('#dateSelect').MPDatepicker('value');
-        var unit = 'month'
+        var unit = 'day'
         var params = {
           from_date: dateRange.from.toISOString().split('T')[0],
           to_date: dateRange.to.toISOString().split('T')[0],
