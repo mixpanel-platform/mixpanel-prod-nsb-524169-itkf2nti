@@ -7,9 +7,135 @@
     <script src="https://cdn.mxpnl.com/libs/mixpanel-platform/build/mixpanel-platform.v0.latest.min.js"></script>
   </head>
   <body class="mixpanel-platform-body">
-    <h1>Hello, World!</h1>
+    <h1 class="temporary">Loading</h1>
     <script>
-      // Run queries and display results here
+      var dateRange = {
+        from: "2015-09-01",
+        to: "2016-09-30"
+      }
+      
+      var unit = 'month'
+      var funnels = [
+        {
+          funnel_id:1962718,
+          from_date:dateRange.from,
+          to_date: dateRange.to,
+          limit:200,
+          unit: unit
+        },
+        {
+          funnel_id:1965004,
+          from_date:dateRange.from,
+          to_date: dateRange.to,
+          limit:200,
+          unit: unit
+        },
+        {
+          funnel_id:1965034,
+          from_date:dateRange.from,
+          to_date: dateRange.to,
+          limit:200,
+          unit: unit
+        },
+        {
+          funnel_id:1965052,
+          from_date:dateRange.from,
+          to_date: dateRange.to,
+          limit:200,
+          unit: unit
+        },
+        {
+          funnel_id:1965056,
+          from_date:dateRange.from,
+          to_date: dateRange.to,
+          limit:200,
+          unit: unit
+        },
+        {
+          funnel_id:1965086,
+          from_date:dateRange.from,
+          to_date: dateRange.to,
+          limit:200,
+          unit: unit
+        },
+        {
+          funnel_id:1965114,
+          from_date:dateRange.from,
+          to_date: dateRange.to,
+          limit:200,
+          unit: unit
+        },
+        ]
+        
+      var OAO = [
+        "OAO 1",
+        "OAO 2",
+        "OAO 3",
+        "OAO 4",
+        "OAO 5",
+        "OAO 6",
+        "OAO 7"
+        ]  
+      var queryPromises = []
+      // add segmentation requests to queryPromises  
+     
+      _.each(funnels, funnel => queryPromises.push(MP.api.query('api/2.0/funnels/',funnel)))  
+      Promise.all(queryPromises).then(function(promises){
+        var res = {}
+        debugger
+        _.each(promises, function(funnel, i){
+          res[programNames[i]] = {}
+          _.each(funnel.data, function(conv, month){
+            res[programNames[i]][month] = conv.steps[conv.steps.length - 1]["overall_conv_ratio"]
+          })
+        })
+        // downloadCSV(res, 'TEA Dashboards' + ' ' + new Date().toISOString().substr(0, 10))
+      })
+      
+    function downloadCSV(data, ReportTitle) {
+      $('.temporary').textContent = 'Downloading'
+      var CSV = '';
+      var sortedDates = [];
+      console.log(data);
+      //Write the headers
+      var header = ['program']
+      var rows = []
+      var months = []
+      var row = []
+      _.each(data["TEA (Bundle with push regardless of MDN)"], (val, month) => {
+        months.push(month)
+      })
+      months = months.sort()
+      header = header.concat(months)
+      rows.push(header.join(','))
+      _.each(data, (dates, program) => {
+        row.push(program)
+        _.each(months, month => row.push(dates[month]))
+        rows.push(row.join(','))
+        row = []
+      })
+      CSV = rows.join('\n')
+      
+      //Generate a file name
+      var fileName = ReportTitle.replace(/ /g,"_");   
+  
+      //Initialize file format you want csv or xls
+      var uri = 'data:text/csv;charset=utf-8,' + escape(CSV);
+  
+      //this trick will generate a temp <a /> tag
+      var link = document.createElement("a");    
+      link.href = uri;
+  
+      //set the visibility hidden so it will not effect on your web-layout
+      link.style = "visibility:hidden";
+      link.download = fileName + ".csv";
+  
+      //this part will append the anchor tag and remove it after automatic click
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    };
+      
     </script>
   </body>
 </html>
