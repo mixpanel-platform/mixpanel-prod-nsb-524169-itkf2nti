@@ -64,7 +64,6 @@
         _.each(funnels, funnel => queryPromises.push(MP.api.query('api/2.0/funnels/',_.extend(funnel, params))))  
         Promise.all(queryPromises).then(function(promises){
           var res = {}
-          debugger
           _.each(promises, function(funnel, i){
             res[funnelNames[i]] = {}
             _.each(funnel.data, function(conv, month){
@@ -72,21 +71,20 @@
             })
           })
           eventGraph.MPChart('setData', res);
-          // downloadCSV(res, 'TEA Dashboards' + ' ' + new Date().toISOString().substr(0, 10))
+          downloadCSV(res, 'OAO CSV' + ' ' + new Date().toISOString().substr(0, 10))
         })
       }
       
     function downloadCSV(data, ReportTitle) {
-      $('.temporary').textContent = 'Downloading'
       var CSV = '';
       var sortedDates = [];
       console.log(data);
       //Write the headers
-      var header = ['program']
+      var header = ['Funnel']
       var rows = []
       var months = []
       var row = []
-      _.each(data["TEA (Bundle with push regardless of MDN)"], (val, month) => {
+      _.each(data["OAO 1"], (val, month) => {
         months.push(month)
       })
       months = months.sort()
