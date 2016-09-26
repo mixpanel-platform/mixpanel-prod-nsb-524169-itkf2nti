@@ -7,8 +7,14 @@
     <script src="https://cdn.mxpnl.com/libs/mixpanel-platform/build/mixpanel-platform.v0.latest.min.js"></script>
   </head>
   <body class="mixpanel-platform-body">
-    <h1 class="temporary">Loading</h1>
+    <div class="mixpanel-platform-section">
+      <div id="dateSelect" style="float: right;"></div>
+      <div style="clear: both;"></div>
+      <div id="graph"></div>
+    </div>
     <script>
+      var dateSelect  = $('#dateSelect').MPDatepicker();
+      var eventGraph  = $('#graph').MPChart({chartType: 'line'});
       var dateRange = {
         from: "2015-09-01",
         to: "2016-09-30"
@@ -89,6 +95,7 @@
             res[funnelNames[i]][month] = conv.steps[conv.steps.length - 1]["overall_conv_ratio"]
           })
         })
+        eventGraph.MPChart('setData', res);
         // downloadCSV(res, 'TEA Dashboards' + ' ' + new Date().toISOString().substr(0, 10))
       })
       
