@@ -67,7 +67,7 @@
         },
         ]
         
-      var OAO = [
+      var funnelNames = [
         "OAO 1",
         "OAO 2",
         "OAO 3",
@@ -84,9 +84,9 @@
         var res = {}
         debugger
         _.each(promises, function(funnel, i){
-          res[programNames[i]] = {}
+          res[funnelNames[i]] = {}
           _.each(funnel.data, function(conv, month){
-            res[programNames[i]][month] = conv.steps[conv.steps.length - 1]["overall_conv_ratio"]
+            res[funnelNames[i]][month] = conv.steps[conv.steps.length - 1]["overall_conv_ratio"]
           })
         })
         // downloadCSV(res, 'TEA Dashboards' + ' ' + new Date().toISOString().substr(0, 10))
