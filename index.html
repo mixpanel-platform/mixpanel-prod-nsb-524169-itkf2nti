@@ -17,58 +17,35 @@
       var eventGraph  = $('#graph').MPChart({chartType: 'line'});
       
       var runQuery = function(){
-        debugger
         var dateRange  = $('#dateSelect').MPDatepicker('value');
         var unit = 'month'
+        var params = {
+          from_date: dateRange.from.toISOString().split('T')[0],
+          to_date: dateRange.to.toISOString().split('T')[0],
+          limit: 200,
+          unit: unit
+        }
         var funnels = [
           {
             funnel_id:1962718,
-            from_date:dateRange.from,
-            to_date: dateRange.to,
-            limit:200,
-            unit: unit
           },
           {
             funnel_id:1965004,
-            from_date:dateRange.from,
-            to_date: dateRange.to,
-            limit:200,
-            unit: unit
           },
           {
             funnel_id:1965034,
-            from_date:dateRange.from,
-            to_date: dateRange.to,
-            limit:200,
-            unit: unit
           },
           {
             funnel_id:1965052,
-            from_date:dateRange.from,
-            to_date: dateRange.to,
-            limit:200,
-            unit: unit
           },
           {
             funnel_id:1965056,
-            from_date:dateRange.from,
-            to_date: dateRange.to,
-            limit:200,
-            unit: unit
           },
           {
             funnel_id:1965086,
-            from_date:dateRange.from,
-            to_date: dateRange.to,
-            limit:200,
-            unit: unit
           },
           {
             funnel_id:1965114,
-            from_date:dateRange.from,
-            to_date: dateRange.to,
-            limit:200,
-            unit: unit
           },
           ]
           
@@ -84,7 +61,7 @@
         var queryPromises = []
         // add segmentation requests to queryPromises  
        
-        _.each(funnels, funnel => queryPromises.push(MP.api.query('api/2.0/funnels/',funnel)))  
+        _.each(funnels, funnel => queryPromises.push(MP.api.query('api/2.0/funnels/',_.extend(funnel, params)))  
         Promise.all(queryPromises).then(function(promises){
           var res = {}
           debugger
