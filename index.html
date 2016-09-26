@@ -73,7 +73,6 @@
           })
           eventGraph.MPChart('setData', res);
           exportButton.css("display", "")
-          downloadCSV(res, 'OAO CSV' + ' ' + new Date().toISOString().substr(0, 10))
         })
       }
       
@@ -121,6 +120,9 @@
     };
     runQuery()
     dateSelect.on('change', runQuery)
+    exportButton.on('click', function(){
+      downloadCSV(res, "OAO_Funnels.csv")
+    })
     </script>
   </body>
 </html>
